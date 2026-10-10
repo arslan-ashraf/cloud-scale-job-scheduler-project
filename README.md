@@ -1,6 +1,6 @@
 Project Steps
 
-Step 1: Application and Functional Requirements
+Step 1: Application and Requirements
 
 Step 2: Design Application Architecture
 
