@@ -31,9 +31,9 @@ Method: POST
 
 HEADERS:
 
-Authorization: Bearer <token>
+- Authorization: Bearer <token>
 
-Method: GET
+- Method: GET
 
 - API **GET /jobs?job_id={job_id}&status={status}&start_time={start_time}&end_time={end_time} -> JobMetadata{}**
 
