@@ -10,6 +10,20 @@ Out of scope:
 - Canceling or rescheduling jobs
 - User management
 
+### APIs Served by System
+- POST /jobs
+{
+  "schedule": "0 10 * * *",
+  "metadata": "..."
+}
+HEADERS:
+Authorization: Bearer <token>
+Method: POST
+
+- GET /jobs?job_id={job_id}&status={status}&start_time={start_time}&end_time={end_time} -> JobMetadata{}
+HEADERS:
+Authorization: Bearer <token>
+Method: GET
 
 ### Nonfunctional Requirements
 - Jobs should trigger within 2 seconds of execution start time
