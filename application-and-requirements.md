@@ -4,6 +4,7 @@ In this project, we will design a Distributed Job Scheduler application.  The ap
 
 ### Functional Requirements
 - Users can submit jobs for execution either immediately, at a future time or on a recurring schedule
+- Users can see list of all jobs
 - Users can monitor the status of their jobs
 
 Out of scope:
@@ -11,7 +12,7 @@ Out of scope:
 - User management
 
 ### APIs Served by System
-- **POST /jobs**
+- API **POST /jobs**
 
 Body:
 
@@ -26,7 +27,15 @@ Authorization: Bearer <token>
 
 Method: POST
 
-- **GET /jobs?job_id={job_id}&status={status}&start_time={start_time}&end_time={end_time} -> JobMetadata{}**
+- API **GET /jobs -> Jobs[]**
+
+HEADERS:
+
+Authorization: Bearer <token>
+
+Method: GET
+
+- API **GET /jobs?job_id={job_id}&status={status}&start_time={start_time}&end_time={end_time} -> JobMetadata{}**
 
 HEADERS:
 
@@ -44,4 +53,4 @@ Method: GET
 ### Core Entities
 - Users
 - Job
-- Run (an instance of a job)
+- JobRun (an instance of a job)
