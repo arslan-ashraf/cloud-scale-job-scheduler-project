@@ -24,7 +24,6 @@ Body:
 HEADERS:
 
 - Authorization: Bearer <token>
-
 - Method: POST
 
 #### API: **GET /jobs -> Jobs[]**
@@ -32,7 +31,6 @@ HEADERS:
 HEADERS:
 
 - Authorization: Bearer <token>
-
 - Method: GET
 
 #### API: **GET /jobs?job_id={job_id}&status={status}&start_time={start_time}&end_time={end_time} -> JobMetadata{}**
@@ -40,7 +38,6 @@ HEADERS:
 HEADERS:
 
 - Authorization: Bearer <token>
-
 - Method: GET
 
 ### Nonfunctional Requirements
