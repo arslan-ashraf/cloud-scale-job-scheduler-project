@@ -12,15 +12,18 @@ Out of scope:
 
 ### APIs Served by System
 - POST /jobs
+
 {
   "schedule": "0 10 * * *",
   "metadata": "..."
 }
+
 HEADERS:
 Authorization: Bearer <token>
 Method: POST
 
 - GET /jobs?job_id={job_id}&status={status}&start_time={start_time}&end_time={end_time} -> JobMetadata{}
+
 HEADERS:
 Authorization: Bearer <token>
 Method: GET
