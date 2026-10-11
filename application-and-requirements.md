@@ -12,7 +12,7 @@ Out of scope:
 - User management
 
 ### APIs Served by System
-#### API **POST /jobs**
+#### API: **POST /jobs**
 
 Body:
 
@@ -27,7 +27,7 @@ HEADERS:
 
 - Method: POST
 
-API **GET /jobs -> Jobs[]**
+#### API: **GET /jobs -> Jobs[]**
 
 HEADERS:
 
@@ -35,7 +35,7 @@ HEADERS:
 
 - Method: GET
 
-API **GET /jobs?job_id={job_id}&status={status}&start_time={start_time}&end_time={end_time} -> JobMetadata{}**
+#### API: **GET /jobs?job_id={job_id}&status={status}&start_time={start_time}&end_time={end_time} -> JobMetadata{}**
 
 HEADERS:
 
