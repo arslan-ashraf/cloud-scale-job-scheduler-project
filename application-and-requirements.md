@@ -11,7 +11,7 @@ Out of scope:
 - User management
 
 ### APIs Served by System
-- POST /jobs
+- **POST /jobs**
 
 Body:
 
@@ -26,7 +26,7 @@ Authorization: Bearer <token>
 
 Method: POST
 
-- GET /jobs?job_id={job_id}&status={status}&start_time={start_time}&end_time={end_time} -> JobMetadata{}
+- **GET /jobs?job_id={job_id}&status={status}&start_time={start_time}&end_time={end_time} -> JobMetadata{}**
 
 HEADERS:
 
