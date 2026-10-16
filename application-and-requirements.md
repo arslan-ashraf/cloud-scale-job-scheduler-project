@@ -5,10 +5,10 @@ In this project, we will design a Distributed Job Scheduler application.  The ap
 ### Functional Requirements
 - Users can submit jobs for execution either immediately, at a future time or on a recurring schedule
 - Users can see list of all jobs
+- Users can cancel jobs
 - Users can monitor the status of their jobs
 
 Out of scope:
-- Canceling or rescheduling jobs
 - User management
 
 ### APIs Served by System
@@ -17,7 +17,7 @@ Out of scope:
 Body:
 
 {
-  "schedule": "0 10 * * *",
+  "schedule": "0 1 * * *",
   "metadata": "..."
 }
 
