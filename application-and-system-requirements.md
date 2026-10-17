@@ -42,12 +42,13 @@ HEADERS:
 
 ### Nonfunctional Requirements
 - Jobs should trigger within 2 seconds of execution start time
+- Jobs should fail gracefully
 - System should be scalable to support up to 10k jobs per second
 - System should execute jobs exactly once
-- System should have watertight security
+- System should be secure
 - System should be fully observable
 
 ### Core Entities
 - Users
-- Job
-- JobRun (an instance of a job)
+- Jobs
+- JobRuns (an instance of a job)
