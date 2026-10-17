@@ -29,6 +29,7 @@ resource "aws_subnet" "subnets_in_example_vpc" {
 
   tags = {
     Name = "${each.value.public == true ? "public" : "private"}_${each.key}"
+    Environment = var.environment
   }
 
   lifecycle {
@@ -42,6 +43,10 @@ resource "aws_subnet" "subnets_in_example_vpc" {
 resource "aws_internet_gateway" "example_internet_gateway" {
   count  = length(local.public_subnets) > 0 ? 1 : 0
   vpc_id = aws_vpc.example_vpc.id
+
+  tags = {
+    Environment = var.environment
+  }
 }
 
 resource "aws_route_table" "route_table_in_example_vpc" {
@@ -54,6 +59,10 @@ resource "aws_route_table" "route_table_in_example_vpc" {
     # in this example there is only 1 public subnet and the internet gateway is
     # wrapped inside an array, hence: example_internet_gateway[0]
     gateway_id = aws_internet_gateway.example_internet_gateway[0].id
+  }
+
+  tags = {
+    Environment = var.environment
   }
 }
 
