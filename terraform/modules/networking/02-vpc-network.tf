@@ -14,7 +14,10 @@ data "aws_availability_zones" "AZs" {
 
 resource "aws_vpc" "example_vpc" {
   cidr_block = var.vpc_config.cidr_block
-  tags       = { Name = var.vpc_config.name }
+  tags       = { 
+    Name = var.vpc_config.name,
+    Environment = var.environment
+  }
 }
 
 # multiple subnets with for_each loop

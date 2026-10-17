@@ -1,3 +1,7 @@
+variable "environment" {
+  type = string
+}
+
 variable "vpc_config" {
   type = object({
     cidr_block = string
