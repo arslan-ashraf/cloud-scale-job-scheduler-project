@@ -51,4 +51,4 @@ HEADERS:
 ### Core Entities
 - Users
 - Jobs
-- JobRuns (an instance of a job)
+- JobExecutions (an instance of a job)
