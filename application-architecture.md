@@ -1,0 +1,1 @@
+![Alt Text](application-architecture.png)
