@@ -20,6 +20,23 @@ Production-grade job scheduler platform built on AWS with Terraform.
 - Automated security scanning
 
 
+## Reliability
+
+Availability target: 99.9%
+
+RTO: 2 hours
+RPO: 1 hour
+
+Failure scenarios tested:
+
+✓ ECS task failure
+✓ Application deployment failure
+✓ Worker failure
+✓ SQS retry exhaustion
+✓ Database restoration
+✓ Availability-zone failure
+
+
 Project Steps
 
 Step 1: Application and Sytem Requirements
