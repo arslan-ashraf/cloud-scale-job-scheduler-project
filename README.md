@@ -29,12 +29,11 @@ RPO: 1 hour
 
 Failure scenarios tested:
 
-✓ ECS task failure
-✓ Application deployment failure
-✓ Worker failure
-✓ SQS retry exhaustion
-✓ Database restoration
-✓ Availability-zone failure
+- ✓ ECS task failure
+- ✓ Application deployment failure
+- ✓ Worker failure
+- ✓ SQS retry exhaustion
+- ✓ Availability-zone failure
 
 
 Project Steps
