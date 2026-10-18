@@ -1,3 +1,25 @@
+# Cloud Scale Job Schduler Project
+
+Production-grade job scheduler platformbuilt on AWS with Terraform.
+
+## Architecture
+
+[diagram]
+
+## Features
+
+- Multi-region architecture
+- Containerized workloads
+- Infrastructure as Code with Terraform
+- Automated CI/CD with Github Actions
+- Zero-downtime deployments
+- Asynchronous job processing
+- Centralized observability
+- Least-privilege IAM
+- Disaster recovery
+- Automated security scanning
+
+
 Project Steps
 
 Step 1: Application and Sytem Requirements
