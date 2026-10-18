@@ -1,6 +1,6 @@
 # Cloud Scale Job Schduler Project
 
-Production-grade job scheduler platformbuilt on AWS with Terraform.
+Production-grade job scheduler platform built on AWS with Terraform.
 
 ## Architecture
 
