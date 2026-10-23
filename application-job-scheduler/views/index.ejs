@@ -1,0 +1,280 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Cloud Scale Job Scheduler</title>
+  <link rel="stylesheet" href="/styles.css">
+</head>
+<body>
+  <div class="shell">
+
+    <aside class="sidebar">
+      <a class="brand" href="/"><span class="brand-mark">✳</span><span>Cloud Scale<small>JOB SCHEDULER</small></span></a>
+
+      <div class="nav-label">WORKSPACE</div>
+
+      <a class="nav active" href="/"><span>▦</span> Overview</a>
+
+      <a class="nav" href="#jobs"><span>◷</span> Job runs</a>
+
+      <div class="sidebar-bottom">
+        <div class="status-dot"></div>
+        <div><strong>Scheduler online</strong><small>In-memory mode</small></div>
+      </div>
+    </aside>
+
+    <main class="main">
+
+      <header class="topbar">
+        <div class="crumb">Workspace <span>/</span> Overview</div>
+        <div class="live"><i></i> All systems operational</div>
+      </header>
+
+      <section class="welcome">
+        <div>
+          <div class="eyebrow">YOUR AUTOMATION HUB</div>
+            <h1>Good work starts<br>with <em>good timing.</em></h1>
+            <p>Schedule it, run it, track it. Your jobs, all in one place.</p>
+        </div>
+
+        <div class="hero-orb">
+          <div class="orb-ring ring-one"></div>
+          <div class="orb-ring ring-two"></div>
+          <div class="orb-center">✳</div>
+          <span class="orb-label">JOB ENGINE <b>ACTIVE</b></span>
+        </div>
+      </section>
+
+      <section class="stats">
+
+        <article class="stat-card">
+          <div class="stat-head">TOTAL JOBS <span class="stat-icon">▤</span></div>
+          <div class="stat-number" id="total">0</div>
+          <div class="stat-foot">All scheduled and executed jobs</div>
+        </article>
+
+        <article class="stat-card">
+          <div class="stat-head">IN PROGRESS <span class="stat-icon purple">◌</span></div>
+          <div class="stat-number" id="running">0</div>
+          <div class="stat-foot"><span class="tiny-dot"></span> Currently executing</div>
+        </article>
+
+        <article class="stat-card">
+          <div class="stat-head">COMPLETED <span class="stat-icon green">✓</span></div>
+          <div class="stat-number" id="completed">0</div><div class="stat-foot">Successfully finished</div>
+        </article>
+
+        <article class="stat-card">
+          <div class="stat-head">SCHEDULED <span class="stat-icon amber">◷</span></div>
+          <div class="stat-number" id="scheduled">0</div>
+          <div class="stat-foot">Waiting for their moment</div>
+        </article>
+
+      </section>
+
+      <section class="content-grid">
+
+        <section class="panel jobs-panel" id="jobs">
+          <div class="panel-heading">
+            <div>
+              <div class="eyebrow">ACTIVITY</div>
+              <h2>Recent jobs</h2>
+            </div>
+            <button class="text-button" id="refresh">↻ Refresh</button>
+          </div>
+
+          <div class="filters"><span>ALL JOBS</span><span class="filter-count" id="jobCount">0</span><span class="auto-refresh">● Live updates every 3s</span></div>
+
+          <div class="job-list" id="jobList">
+            <div class="empty">
+              <div class="empty-icon">✳</div>
+              <h3>Your queue is looking quiet</h3><p>Create your first job to see it appear here.</p>
+            </div>
+          </div>
+        </section>
+
+        <section class="panel create-panel">
+          <div class="panel-heading">
+            <div>
+              <div class="eyebrow">GET THINGS MOVING</div>
+              <h2>Create a job</h2>
+            </div>
+            <span class="plus-icon">＋</span>
+          </div>
+
+          <form id="jobForm">
+            <label for="name">JOB NAME</label>
+            <input id="name" name="name" placeholder="e.g. Send weekly report" maxlength="120" required>
+            <label for="scheduleType">WHEN SHOULD IT RUN?</label>
+            
+            <div class="choice-row">
+              <label class="choice">
+                <input type="radio" name="scheduleType" value="now" checked>
+                <span>Now</span>
+              </label>
+              <label class="choice">
+                <input type="radio" name="scheduleType" value="later">
+                <span>Later</span>
+              </label>
+              <label class="choice">
+                <input type="radio" name="scheduleType" value="repeat">
+                <span>Recurring</span>
+              </label>
+            </div>
+
+            <div id="laterField" class="conditional hidden">
+              <label for="runAt">RUN DATE & TIME</label>
+              <input id="runAt" type="datetime-local">
+            </div>
+
+            <div id="repeatField" class="conditional hidden">
+              <label for="cronExpression">CRON EXPRESSION</label>
+              <input id="cronExpression" placeholder="*/5 * * * *"><small>Example: every 5 minutes. Uses server local time.</small>
+            </div>
+
+            <label for="message">JOB MESSAGE <span class="optional">OPTIONAL</span></label>
+            <textarea id="message" rows="3" placeholder="What should this job do?"></textarea>
+            <button class="submit-button" type="submit">Create job <span>↗</span></button>
+            <div class="form-note">Demo executor · No external services required</div>
+            <div id="formError" class="form-error"></div>
+          </form>
+        </section>
+
+      </section>
+
+      <footer>BUILT FOR THINGS THAT NEED TO GET DONE <span>·</span> Cloud Scale MVP</footer>
+
+    </main>
+  </div>
+
+  <script>
+
+    const get_html_tag_by_id = id => document.getElementById(id);
+
+    const esc = value => String(value ?? '').replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+
+    const pretty = value => value ? new Date(value).toLocaleString([], { dateStyle: 'medium', timeStyle: 'short' }) : '—';
+
+    const status_label = status => status.replace('-', ' ');
+
+    function render(jobs) {
+      get_html_tag_by_id('total').textContent = jobs.length;
+      get_html_tag_by_id('running').textContent = jobs.filter(j => j.status === 'running').length;
+      get_html_tag_by_id('completed').textContent = jobs.filter(j => j.status === 'completed').length;
+      get_html_tag_by_id('scheduled').textContent = jobs.filter(j => j.status === 'scheduled' || j.status === 'queued').length;
+      get_html_tag_by_id('jobCount').textContent = jobs.length;
+
+      if (!jobs.length) { 
+        get_html_tag_by_id('jobList').innerHTML = '<div class="empty"><div class="empty-icon">✳</div><h3>Your queue is looking quiet</h3><p>Create your first job to see it appear here.</p></div>'; 
+        return; 
+      }
+
+      get_html_tag_by_id('jobList').innerHTML = jobs.map(j => 
+        `<article class="job-row">
+          <div class="job-symbol ${esc(j.status)}">
+            ${j.status === 'completed' ? '✓' : j.status === 'failed' ? '!' : j.status === 'running' ? '↻' : '◷'}
+          </div>
+          <div class="job-info">
+            <strong>${esc(j.name)}</strong>
+            <small>${esc(j.type === 'recurring-run' ? 'Recurring run' : j.type)} · ${esc(pretty(j.createdAt))}</small>
+            ${j.error ? `<small class="error-text">${esc(j.error)}</small>` : ''}
+          </div>
+          <div class="job-right"><span class="pill ${esc(j.status)}">${esc(status_label(j.status))}</span><button class="delete-button" data-delete="${esc(j.id)}" title="Delete job" aria-label="Delete ${esc(j.name)}">×</button>
+          </div>
+        </article>`
+      ).join('');
+    }
+
+    async function refresh() {
+      try { 
+        const response = await fetch('/api/jobs'); 
+        render(await response.json()); 
+      } catch (_) {} 
+    }
+
+    document.querySelectorAll('input[name="scheduleType"]').forEach(input => input.addEventListener('change', () => {
+        const type = document.querySelector('input[name="scheduleType"]:checked').value;
+
+        get_html_tag_by_id('laterField').classList.toggle('hidden', type !== 'later'); 
+
+        get_html_tag_by_id('repeatField').classList.toggle('hidden', type !== 'repeat');
+      })
+    );
+
+    get_html_tag_by_id('jobForm').addEventListener('submit', async event => {
+      event.preventDefault(); 
+
+      get_html_tag_by_id('formError').textContent = '';
+
+      const type = document.querySelector('input[name="scheduleType"]:checked').value;
+
+      const body = { 
+        name: get_html_tag_by_id('name').value, 
+        payload: { 
+          message: get_html_tag_by_id('message').value
+        } 
+      };
+
+      if (type === 'later') {
+        if (!get_html_tag_by_id('runAt').value) {
+          get_html_tag_by_id('formError').textContent = 'Choose a date and time.'; 
+          return; 
+        }
+        body.runAt = new Date(get_html_tag_by_id('runAt').value).toISOString(); 
+      }
+
+      if (type === 'repeat') body.cronExpression = get_html_tag_by_id('cronExpression').value.trim();
+
+      const button = event.submitter; button.disabled = true; button.innerHTML = 'Creating…';
+
+      try {
+        const response = await fetch('/api/jobs', { 
+          method: 'POST', 
+          headers: { 'Content-Type': 'application/json' }, 
+          body: JSON.stringify(body) 
+        }); 
+
+        const result = await response.json(); 
+
+        if (!response.ok) throw new Error(result.error || 'Could not create job'); 
+
+        get_html_tag_by_id('jobForm').reset(); 
+        get_html_tag_by_id('laterField').classList.add('hidden'); 
+        get_html_tag_by_id('repeatField').classList.add('hidden'); 
+
+        await refresh();
+
+      } catch (error) { 
+
+        get_html_tag_by_id('formError').textContent = error.message;
+
+      } finally { 
+
+        button.disabled = false; 
+        button.innerHTML = 'Create job <span>↗</span>'; 
+        
+      }
+
+    });
+
+    get_html_tag_by_id('jobList').addEventListener('click', async event => { 
+      const button = event.target.closest('[data-delete]'); 
+      if (!button) return; 
+
+      await fetch('/api/jobs/' + encodeURIComponent(button.dataset.delete), { 
+        method: 'DELETE' 
+      }); 
+
+      refresh(); 
+    });
+
+    get_html_tag_by_id('refresh').addEventListener('click', refresh); 
+
+    refresh(); 
+
+    setInterval(refresh, 3000);
+
+  </script>
+
+</body>
+</html>
