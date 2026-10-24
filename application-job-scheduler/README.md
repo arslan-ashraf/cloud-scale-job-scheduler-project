@@ -40,18 +40,6 @@ Dockerize the app:
 docker compose up --build -d
 ```
 
-Test health endpoint:
-
-```bash
-curl http://127.0.0.1:3000/healthz
-```
-
-should return:
-
-```bash
-{"status":"ok"}
-```
-
 Open http://localhost:3000.
 
 ## API
