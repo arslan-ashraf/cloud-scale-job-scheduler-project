@@ -2,10 +2,6 @@
 
 Production-grade job scheduler platform built on AWS with Terraform.
 
-## Architecture
-
-[diagram]
-
 ## Features
 
 - Multi-region architecture
@@ -35,6 +31,13 @@ Failure scenarios tested:
 - ✓ SQS retry exhaustion
 - ✓ Availability-zone failure
 
+## Application Architecture
+
+![Alt Text](application-architecture.png)
+
+## AWS Architecture
+
+![Alt Text](aws-architecture.png)
 
 Project Steps
 
