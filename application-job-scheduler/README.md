@@ -34,6 +34,24 @@ To run application:
 npm start
 ```
 
+Dockerize the app:
+
+```bash
+docker compose up --build -d
+```
+
+Test health endpoint:
+
+```bash
+curl http://127.0.0.1:3000/healthz
+```
+
+should return:
+
+```bash
+{"status":"ok"}
+```
+
 Open http://localhost:3000.
 
 ## API
@@ -43,23 +61,27 @@ Open http://localhost:3000.
 ```bash
 curl -X POST http://localhost:3000/api/jobs \
   -H 'Content-Type: application/json' \
-  -d '{"name":"Send report","payload":{"message":"Report generated"}}'
+  -d '{"name":"Send report", "payload":{"message":"Report generated"}}'
 ```
 
 ### Schedule a one-time job
 
 Send an ISO-8601 `runAt` timestamp in the future:
 
-```json
-{"name":"Run later","runAt":"2027-01-01T12:00:00.000Z","payload":{"message":"Hello"}}
+```bash
+curl -X POST http://localhost:3000/api/jobs \
+  -H 'Content-Type: application/json' \
+  -d {"name":"Run later", "payload":{"message":"Hello"}, "runAt":"2027-01-01T12:00:00.000Z"}
 ```
 
 ### Create a recurring job
 
 Uses standard 5-field cron syntax (server local time):
 
-```json
-{"name":"Periodic check","cronExpression":"*/5 * * * *","payload":{"message":"Check complete"}}
+```bash
+curl -X POST http://localhost:3000/api/jobs \
+  -H 'Content-Type: application/json' \
+  -d {"name":"Periodic check", "payload":{"message":"Check complete"}," cronExpression":"*/5 * * * *"}
 ```
 
 ### List jobs
@@ -74,11 +96,9 @@ Uses standard 5-field cron syntax (server local time):
 
 `DELETE /api/jobs/:id`
 
-## MVP limitations
+## Limitations
 
-- No authentication or authorization, as requested. Do not expose publicly without adding access controls.
-- In-memory data is not durable; restart loses all jobs and schedules.
-- The demo executor does not execute arbitrary code or external work.
-- Long one-time delays beyond Node's maximum timeout are not robustly handled; production scheduling needs durable storage and a worker/queue architecture.
-- Recurring schedules create a separate history record for each run. Deleting the parent schedule stops future runs; run-history records remain.
-- This is a single-process MVP, not a production-grade distributed scheduler.
+- No authentication or authorization
+- In-memory data only, restart loses all jobs and schedules
+- The demo executor does not execute any code or external work
+- Recurring schedules create a separate history record for each run. Deleting the parent schedule stops future runs but run-history records remain
