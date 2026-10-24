@@ -5,9 +5,19 @@ This module creates a vpc and an arbitrary number of public and private subnets.
 Example usage:
 
 ```
-# name can be anything, here we choose my_network_module
+# module name can be anything, here we choose my_network_module
+
+provider "aws" {
+  region = "us-east-1"
+  alias  = "us_east_1"
+}
+
 module "my_network_module" {
 	source = "./modules/networking"
+
+	providers = {
+		aws = aws.us_east_1
+	}
 
 	environment = "Developement"
 

@@ -2,6 +2,10 @@ variable "environment" {
   type = string
 }
 
+variable "aws_region" {
+  type = string
+}
+
 variable "vpc_config" {
   type = object({
     cidr_block = string
