@@ -35,8 +35,15 @@ jobs:
         with:
           directory: terraform/modules/network
           framework: terraform
+          output_format: sarif  # json, cli
+          output_file_path: results.sarif
           # soft_fail: true   # pipeline won't fail on checkov findings
 
+      - name: Upload Checkov Terraform Results in SARIF to GitHub Security
+        uses: github/codeql-action/upload-sarif@v3
+        if: always() # forces this step to run even if Checkov finds errors
+        with:
+          sarif_file: results.sarif
 
   checkov_docker_scan_job:
     runs-on: ubuntu-latest
@@ -50,5 +57,13 @@ jobs:
         uses: bridgecrewio/checkov-action@master
         with:
           directory: application-job-scheduler/Dockerfile
-          framework: docker
+          framework: dockerfile
+          output_format: sarif  # json, cli
+          output_file_path: results.sarif
           # soft_fail: true   # pipeline won't fail on checkov findings
+
+      - name: Upload Checkov Dockerfile Results in SARIF to GitHub Security
+        uses: github/codeql-action/upload-sarif@v3
+        if: always() # forces this step to run even if Checkov finds errors
+        with:
+          sarif_file: results.sarif
