@@ -13,7 +13,7 @@ provider "aws" {
 }
 
 module "my_network_module" {
-	source = "./modules/networking"
+	source = "./modules/network"
 
 	providers = {
 		aws = aws.us_east_1

@@ -1,8 +1,47 @@
 name: secure-ci-cd-workflow
 
 on:
-  merge:
+  pull_request:
     branches: [ "main" ]
+  paths:
+    - terraform/**
 
   # allows running this workflow manually from the Actions tab
   workflow_dispatch:
+
+jobs:
+  gitleaks_scan_job:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout  Source Code
+        uses: actions/checkout@v7
+        with:
+          fetch-depth: 1   # only pulls current commit, 0 pulls all history
+
+      - name: Run Gitleaks Scan
+        uses: gitleaks/gitleaks-action@v3
+
+  checkov_terraform_scan_job:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout  Source Code
+        uses: actions/checkout@v7
+        with:
+          fetch-depth: 1
+
+      - name: Run Checkov Action
+        uses: bridgecrewio/checkov-action@master
+        with:
+          directory: terraform/modules/network
+          framework: terraform
+          # soft_fail: true   # pipeline won't fail on checkov findings
+
+
+
+  checkov_docker_scan_job:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout  Source Code
+        uses: actions/checkout@v7
+        with:
+          fetch-depth: 1
