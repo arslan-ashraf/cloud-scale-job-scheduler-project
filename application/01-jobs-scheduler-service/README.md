@@ -1,4 +1,4 @@
-# Job Scheduler MVP
+# Jobs Scheduler MVP
 
 A small Node.js + Express + EJS job scheduler with a responsive dashboard and JSON API.
 
