@@ -11,7 +11,6 @@ on:
 
 permissions:
   contents: read
-  security-events: write # required to upload SARIF data to github security tab
 
 jobs:
   gitleaks_scan_job:
@@ -27,6 +26,9 @@ jobs:
 
 
   checkov_terraform_scan_job:
+    permissions:
+      security-events: write # required to upload SARIF data to github security tab
+
     runs-on: ubuntu-latest
     needs:
       - gitleaks_scan_job
@@ -47,12 +49,15 @@ jobs:
           # soft_fail: true   # pipeline won't fail on checkov findings
 
       - name: Upload Checkov Terraform Results in SARIF to GitHub Security
-        uses: github/codeql-action/upload-sarif@v3
+        uses: github/codeql-action/upload-sarif@v4
         if: always() # forces this step to run even if Checkov finds errors
         with:
           sarif_file: results.sarif
 
   checkov_docker_scan_job:
+    permissions:
+      security-events: write # required to upload SARIF data to github security tab
+
     runs-on: ubuntu-latest
     needs:
       - gitleaks_scan_job
@@ -73,10 +78,52 @@ jobs:
           # soft_fail: true   # pipeline won't fail on checkov findings
 
       - name: Upload Checkov Dockerfile Results in SARIF to GitHub Security
-        uses: github/codeql-action/upload-sarif@v3
+        uses: github/codeql-action/upload-sarif@v4
         if: always() # forces this step to run even if Checkov finds errors
         with:
           sarif_file: results.sarif
+
+
+  trivy_file_system_scan_job:
+    permissions:
+      security-events: write # required to upload SARIF data to github security tab
+
+    runs-on: ubuntu-latest
+    needs:
+      - gitleaks_scan_job
+
+    steps:
+      - name: Checkout  Source Code
+        uses: actions/checkout@v7
+        with:
+          fetch-depth: 1
+
+      - name: Scan Git Repo Using Trivy Filesystem Scanner
+        uses: aquasecurity/trivy-action@v0.36.0
+        with:
+          scan-type: 'fs'
+          scan-ref: '.'
+          scanners: 'vuln,misconfig,secret'
+          ignore-unfixed: true
+          format: 'sarif'
+          output: 'trivy-results.sarif'
+          severity: 'HIGH,CRITICAL'
+          exit-code: '0'
+
+      - name: Upload Trivy Results to GitHub Security
+        if: always()
+        uses: github/codeql-action/upload-sarif@v4
+        with:
+          sarif_file: 'trivy-results.sarif'
+          category: 'trivy-filesystem-scan'
+
+      - name: Upload Trivy Report Artifact
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: trivy-scan-results
+          path: trivy-results.sarif
+          retention-days: 30
 
 
   app_lint_job:
@@ -84,6 +131,7 @@ jobs:
     needs:
       - checkov_terraform_scan_job
       - checkov_docker_scan_job
+      - trivy_file_system_scan_job
 
     steps:
       - name: Checkout  Source Code
