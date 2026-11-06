@@ -22,7 +22,7 @@ jobs:
           fetch-depth: 1   # only pulls current commit, 0 pulls all history
 
       - name: Run Gitleaks Scan
-        uses: gitleaks/gitleaks-action@v3
+        uses: gitleaks/gitleaks-action@bcfb9cce635345aac9996cedc19b2de8e01b894f #v3.0.0
 
 
   checkov_terraform_scan_job:
@@ -40,7 +40,7 @@ jobs:
           fetch-depth: 1
 
       - name: Checkov Terraform Scan
-        uses: bridgecrewio/checkov-action@master
+        uses: bridgecrewio/checkov-action@45edc9d8856b664db2ec251f5f8632361f0a67aa # v3.4.3
         with:
           directory: terraform/modules/network
           framework: terraform
@@ -69,7 +69,7 @@ jobs:
           fetch-depth: 1
 
       - name: Checkov Docker scan
-        uses: bridgecrewio/checkov-action@master
+        uses: bridgecrewio/checkov-action@45edc9d8856b664db2ec251f5f8632361f0a67aa # v3.4.3
         with:
           directory: application-job-scheduler/Dockerfile
           framework: dockerfile
@@ -99,8 +99,8 @@ jobs:
           fetch-depth: 1
 
       - name: Scan Git Repo Using Trivy Filesystem Scanner
-        uses: aquasecurity/trivy-action@v0.36.0
-        with:
+        uses: aquasecurity/trivy-action@38b337fff0a2f984d5be173c99e3f633438167ec # v0.36.0
+        with: 
           scan-type: 'fs'
           scan-ref: '.'
           scanners: 'vuln,misconfig,secret'
@@ -117,7 +117,7 @@ jobs:
           sarif_file: 'trivy-results.sarif'
           category: 'trivy-filesystem-scan'
 
-      - name: Upload Trivy Report Artifact
+      - name: Make Trivy Report Artifact Downloadable
         if: always()
         uses: actions/upload-artifact@v4
         with:
