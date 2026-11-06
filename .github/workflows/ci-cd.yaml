@@ -150,6 +150,7 @@ jobs:
         run: npm ci
 
       - name: Run Linter Script
+        working-directory: ./application/01-jobs-scheduler-service
         run: npm run lint
 
 
@@ -177,6 +178,7 @@ jobs:
         run: npm ci
 
       - name: Run Unit Tests
+        working-directory: ./application/01-jobs-scheduler-service
         run: npm run test:unit 
 
 
@@ -204,4 +206,5 @@ jobs:
         run: npm ci
 
       - name: Run Unit Tests
+        working-directory: ./application/01-jobs-scheduler-service
         run: npm run test:integration 
