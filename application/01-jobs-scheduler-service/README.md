@@ -1,6 +1,6 @@
-# Taskflow — Job Scheduler MVP
+# Job Scheduler MVP
 
-A small Node.js + Express + EJS job scheduler with a responsive dashboard and JSON API. Jobs and schedules are held in memory, so all data disappears when the process restarts. The executor is intentionally a demo that waits briefly and returns the job message; replace it with your real task handler.
+A small Node.js + Express + EJS job scheduler with a responsive dashboard and JSON API.
 
 ## Run locally
 
